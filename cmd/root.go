@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"log"
-	"os"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
@@ -17,7 +16,7 @@ func Execute() {
 		Run: func(cmd *cobra.Command, args []string) {
 			if err := scan.Run(cmd.Flags().Args()); err != nil {
 				log.Printf("%+v", err)
-				os.Exit(1)
+				return
 			}
 		},
 	}
@@ -27,6 +26,6 @@ func Execute() {
 			log.Printf("%+v", err)
 		}
 
-		os.Exit(1)
+		return
 	}
 }

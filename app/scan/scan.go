@@ -3,6 +3,7 @@ package scan
 import (
 	"database/sql"
 	"fmt"
+	"strings"
 
 	"github.com/pkg/errors"
 )
@@ -14,6 +15,12 @@ func Run(args []string) error {
 	}
 
 	defer db.Close()
+
+	available := db.Ping()
+	if !strings.Contains(available.Error(), "1045") {
+		fmt.Printf("No connection available at IP: %s with Port %s", args[0], args[1])
+		return nil
+	}
 
 	var version string
 
@@ -28,5 +35,5 @@ func Run(args []string) error {
 }
 
 func buildConnString(IP, port string) string {
-	return fmt.Sprintf("tcp(%s:%s)", IP, port)
+	return fmt.Sprintf("tcp(%s:%s)/", IP, port)
 }
