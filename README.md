@@ -15,3 +15,6 @@ Using Go, write a scanner to detect MySQL running on a port on a host. It should
 `go build` at root level
 `./mys_sweepsy $IP $PORT`
 Then success or failure to connect to the given IP and port for MySQL will print to the console.
+
+## Test
+`go test ./...` will test the process for building the connection string, validates failures when IP or Port are not acceptable.

@@ -2,16 +2,22 @@ package scan
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
+	"net"
+	"strconv"
 	"strings"
-
-	"github.com/pkg/errors"
 )
 
 func Run(args []string) error {
-	db, err := sql.Open("mysql", buildConnString(args[0], args[1]))
+	connectionString, err := buildConnString(args[0], args[1])
 	if err != nil {
-		errors.Wrapf(err, "Failed to generate connection, these inputs are invalid IP: %s and Port %s", args[0], args[1])
+		fmt.Errorf("Failed to generate connection string, these inputs are invalid IP: %s and Port %s", args[0], args[1])
+	}
+
+	db, err := sql.Open("mysql", connectionString)
+	if err != nil {
+		fmt.Errorf("Failed to generate connection object, received error %s", err)
 	}
 
 	defer db.Close()
@@ -37,6 +43,14 @@ func Run(args []string) error {
 	return nil
 }
 
-func buildConnString(IP, port string) string {
-	return fmt.Sprintf("tcp(%s:%s)/", IP, port)
+func buildConnString(IP, port string) (string, error) {
+	if net.ParseIP(IP) == nil {
+		return "", errors.New("Bad IP address format")
+	}
+	intPort, err := strconv.Atoi(port)
+	if err != nil {
+		return "", errors.New("Bad Port format")
+	}
+
+	return fmt.Sprintf("tcp(%s:%d)/", IP, intPort), nil
 }
