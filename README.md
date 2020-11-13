@@ -9,4 +9,9 @@ Using Go, write a scanner to detect MySQL running on a port on a host. It should
 
 ## Output
 * Whether or not MySQL appears to be running on the port on the host
-* Any additional information about the instance of MySQL that it has retrieve
+* Any additional information about the instance of MySQL that it has retrieved
+
+## Usage
+`go build` at root level
+`./mys_sweepsy $IP $PORT`
+Then success or failure to connect to the given IP and port for MySQL will print to the console.
